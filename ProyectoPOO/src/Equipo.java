@@ -1,10 +1,9 @@
-
 import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
 public class Equipo {
-    
+    Scanner sc = new Scanner(System.in);    
     private String nombre;
     private ArrayList<Personaje> personajes;
 
@@ -15,7 +14,7 @@ public class Equipo {
 
     public void agregarPersonaje(Personaje p) {
         this.personajes.add(p);
-        p.setEquipo(this); // Hmmm ?
+        p.setEquipo(this);
     }
 
     public ArrayList<Personaje> getPersonajes() {
@@ -46,77 +45,78 @@ public class Equipo {
         }
         return suma;
     }
+    
 
-
-    public void atacarOtroEquipo(Equipo otroEquipo, Scanner sc) {
+    public void atacarOtroEquipo(Equipo otroEquipo) {
         System.out.println("===================================");
         System.out.println("Equipo atacante: " + this.nombre);
         
         int danoTotalRonda = 0;
         ArrayList<Personaje> enemigos = otroEquipo.getPersonajes();
 
-        // Anadir una lista de enemigos muertos
-        ArrayList<Personaje> muertos = new ArrayList<>();
+        Personaje mistico = this.personajes.get(3);
+        Personaje enemigoMistico = enemigos.get(3);
 
-        Random atackPlayer = new Random();
-
-        for (int i = 0; i < 3; i++) {
+        for (int i = 0; i < 4; i++) {
             Personaje atacante = this.personajes.get(i);
             Personaje enemigo = enemigos.get(i);
-            // ------ PRUEBA DE QUE ENTRE AL GITHUB UUJUJUJUJI
+            System.out.println(atacante.getNombre());
+            System.out.println(enemigo.getNombre());
+
             if (atacante.estaVivo() && enemigo.estaVivo()) {
-                int danoHecho = atacante.realizarAtaque(enemigo);
-                danoTotalRonda += danoHecho;
+                if (i == 3) {
+                    danoTotalRonda += ataqueMistico(mistico, enemigoMistico, sc, danoTotalRonda);
+                } else {
+                    int danoHecho = atacante.realizarAtaque(enemigo);
+                    danoTotalRonda += danoHecho;
+                    System.out.println(" ---------------->>> ENTRA AL IF");
+                }
+                
             } else { // Le añadí código desde aquí -- Para que deje de atacar enemigos muertos
                 if (!atacante.estaVivo()) {
                     System.out.println(atacante.getNombre() + " esta muerto!!!");
                 } else { // Si el enemigo esta muerto
-                    if (!muertos.contains(enemigo)) { // Y si no esta en la lista array de muertos
-                        muertos.add(enemigo); // Que lo anada a la lista array de muertos
-                
-                        int muerto = enemigos.indexOf(enemigo); // Indice del enemigo con descanso eterno
-                        while (muertos.contains(enemigos.get(muerto))) {
-                            muerto = atackPlayer.nextInt(enemigos.size());
-                            try {
-                                System.out.println("Probando while de los muertos");
-                                Thread.sleep(2000);
-                            } catch (InterruptedException e) {
-                                e.printStackTrace();
+                    for (int n = 0; n < 4; n++) {
+                        int enemigoMuertoQuizas = enemigos.get(n).getVida();
+                        if (enemigoMuertoQuizas > 0) {
+                            if (n == 3) {
+                                danoTotalRonda += ataqueMistico(mistico, enemigos.get(n), sc, danoTotalRonda);
+                                break;
                             }
-                        }// Hasta aquí
-                        int danoHecho = atacante.realizarAtaque(enemigos.get(muerto));
-                        danoTotalRonda += danoHecho;
-                        
-                    }
+                            System.out.println(" --------->> ATACANTE: " + atacante.getNombre());
+                            int danoHecho = atacante.realizarAtaque(enemigos.get(n));
+                            danoTotalRonda += danoHecho;
+                        }
+                    }    
                 }
             }
         }
+    }
+
+
+    public int ataqueMistico(Personaje misticoAtaca, Personaje misticoEnemigo, Scanner sc, int danoTotalRonda) {
+    
+        System.out.print("¡Adivina el número del dado (1-6) para potenciar al Místico!: ");
+        int adivinanza = sc.nextInt();
+        int ataqueFinalMistico = misticoAtaca.getAtaque();
+
+        if (misticoAtaca.estaVivo() && misticoEnemigo.estaVivo()) {
+            misticoAtaca.usarEstrategia(); 
         
- 
-        Personaje mistico = this.personajes.get(3);
-        Personaje enemigoMistico = enemigos.get(3);
-        
-        if (mistico.estaVivo() && enemigoMistico.estaVivo()) {
-            mistico.usarEstrategia(); 
-            
             Random rand = new Random();
             int dado = rand.nextInt(6) + 1; 
-            
-            System.out.print("¡Adivina el número del dado (1-6) para potenciar al Místico!: ");
-            int adivinanza = sc.nextInt();
-            
-            int ataqueFinalMistico = mistico.getAtaque(); 
-            
+                
             if (dado == adivinanza) {
                 System.out.println("¡Acierto! El dado fue " + dado + ". ¡El ataque se potencia con " + danoTotalRonda + " de daño extra!");
                 ataqueFinalMistico += danoTotalRonda;
             } else {
                 System.out.println("¡Fallo! El dado fue " + dado + ". El Místico ataca con fuerza normal.");
             }
-            
             // El místico ataca directamente
-            System.out.println(mistico.getNombre() + " ataca a " + enemigoMistico.getNombre());
-            enemigoMistico.recibirAtaque(ataqueFinalMistico);
+            System.out.println(misticoAtaca.getNombre() + " ataca a " + misticoEnemigo.getNombre());
+            misticoEnemigo.recibirAtaque(ataqueFinalMistico);
         }
+        return ataqueFinalMistico;
     }
+    
 }

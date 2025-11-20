@@ -1,12 +1,7 @@
-import java.util.Scanner;
-
 public class Main {
 
     public static void main(String[] args) {
         
-        Scanner sc = new Scanner(System.in);
-        
-     
         Equipo equipo1 = new Equipo("Equipo Rojo");
         equipo1.agregarPersonaje(new Guerrero("Guerrero Rojo 1", 100, 20, 10));
         equipo1.agregarPersonaje(new Guerrero("Guerrero Rojo 2", 100, 20, 10));
@@ -32,14 +27,14 @@ public class Main {
 
            
             if (!equipo1.estaDerrotado() && !equipo2.estaDerrotado()) {
-                equipo1.atacarOtroEquipo(equipo2, sc);
+                equipo1.atacarOtroEquipo(equipo2);
             }
             
            
             if (equipo2.estaDerrotado()) {
                 juegoTerminado = true;
             } else if (!equipo1.estaDerrotado()) { 
-                equipo2.atacarOtroEquipo(equipo1, sc);
+                equipo2.atacarOtroEquipo(equipo1);
                 
                 
                 if (equipo1.estaDerrotado()) {
@@ -77,7 +72,5 @@ public class Main {
                 System.out.println("¡Es un EMPATE!");
             }
         }
-        
-        sc.close();
     }
 }
