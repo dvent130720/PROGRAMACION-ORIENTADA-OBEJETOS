@@ -63,7 +63,7 @@ public class Equipo {
         for (int i = 0; i < 3; i++) {
             Personaje atacante = this.personajes.get(i);
             Personaje enemigo = enemigos.get(i);
-            
+            // ------ PRUEBA DE QUE ENTRE AL GITHUB UUJUJUJUJI
             if (atacante.estaVivo() && enemigo.estaVivo()) {
                 int danoHecho = atacante.realizarAtaque(enemigo);
                 danoTotalRonda += danoHecho;
