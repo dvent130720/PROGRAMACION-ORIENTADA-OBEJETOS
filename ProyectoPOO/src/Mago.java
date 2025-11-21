@@ -22,9 +22,6 @@ public class Mago extends Personaje {
             int indice = rand.nextInt(aliados.size());
             if (aliados.get(indice).estaVivo()) {
                 aliadoACurar = aliados.get(indice);
-                System.out.println(" --------- ALIADO A CURAR:" + aliadoACurar);
-                System.out.println(" --------- INDICE:" + indice);
-
             }
         }
         int curacion = (int)(this.vida * 0.25);
